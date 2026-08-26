@@ -1,7 +1,7 @@
 import Property from "../models/property.models.js";
 import Inquiry from "../models/inquiry.model.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
-import cloudinary from "../config/Cloudinary.js";
+import cloudinary from "../config/cloudinary.js";
 import jwt from "jsonwebtoken";
 
 export const addProperty = async (req, res) => {
