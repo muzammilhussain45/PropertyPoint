@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import Property from '../models/property.models.js';
+import Property from '../models/property.model.js';
 import Inquiry from '../models/inquiry.model.js';
 
 export const getAllUsers = async (req, res) => {

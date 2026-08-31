@@ -4,7 +4,7 @@ import {
   addWishlist,
   getWishlist,
   removeWishlist,
-} from '../controllers/wishlist.controllers.js';
+} from '../controllers/wishlist.controller.js';
 import { protect } from '../middlewares/auth.middleware.js';
 
 const wishlistRouter = express.Router();

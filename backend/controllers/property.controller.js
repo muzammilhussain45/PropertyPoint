@@ -1,4 +1,4 @@
-import Property from "../models/property.models.js";
+import Property from "../models/property.model.js";
 import Inquiry from "../models/inquiry.model.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 import cloudinary from "../config/cloudinary.js";

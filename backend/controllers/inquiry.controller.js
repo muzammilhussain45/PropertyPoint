@@ -1,5 +1,5 @@
 import Inquiry from '../models/inquiry.model.js';
-import Property from '../models/property.models.js';
+import Property from '../models/property.model.js';
 
 
 //buyer send inquiry 
