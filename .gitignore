@@ -1,10 +1,17 @@
 # Dependencies
+node_modules/
 **/node_modules/
 
-# Environment and local secrets
+# Frontend and backend environment files
 .env
 .env.*
 !.env.example
+frontend/.env
+frontend/.env.*
+backend/.env
+backend/.env.*
+
+# Sensitive certificates and keys
 *.pem
 *.key
 *.crt
@@ -30,16 +37,25 @@ logs/
 *.seed
 
 # Build and coverage output
+frontend/dist/
+frontend/build/
+frontend/coverage/
+frontend/.next/
+frontend/.vite/
+backend/dist/
+backend/build/
+backend/coverage/
+.nyc_output/
 dist/
 build/
 coverage/
-.nyc_output/
 
 # Local uploads and generated data
 uploads/
 tmp/
 temp/
 data/
+frontend/public/uploads/
 
 # Operating system and editor files
 .DS_Store
@@ -53,3 +69,5 @@ desktop.ini
 # Node tooling caches
 .npm/
 .eslintcache
+frontend/.eslintcache
+backend/.eslintcache
