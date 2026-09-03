@@ -226,7 +226,7 @@ const AdminUsers = () => {
 
                     {/* Role Column */}
                     <td className={s.tdRole}>
-                      <span className={s.roleBadge}>{user.role}</span>
+                      <span className={s.roleBadge(user.role)}>{user.role}</span>
                     </td>
 
                     {/* Contact Details Column */}

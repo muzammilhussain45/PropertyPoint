@@ -20,7 +20,7 @@ const SellerRequest = () => {
   const fetchRequests = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/admin/pending-seller`,
+        `${API_URL}/api/admin/pending-sellers`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -29,7 +29,8 @@ const SellerRequest = () => {
       );
 
       if (response.data?.success) {
-        setRequests(response.data.pending);
+        const pendingSellers = response.data.pendingSellers || [];
+        setRequests(Array.isArray(pendingSellers) ? pendingSellers : []);
       }
       setLoading(false);
     } catch (err) {
