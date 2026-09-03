@@ -4,12 +4,14 @@ import Properties from "./pages/shared/Properties"
 import PropertyDetails from "./pages/shared/PropertyDetails"
 import Register from "./pages/auth/Register"
 import VerifyEmail from "./pages/auth/VerifyEmail"
+import Login from "./pages/auth/Login"
 
 function App() {
 
   return (
    <div>
     <Routes>
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/" element={<LandingPage />} />

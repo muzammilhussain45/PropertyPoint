@@ -4,7 +4,7 @@ import axios from "axios";
 import Navbar from "../../components/common/Navbar.jsx";
 
 import { API_URL } from "../../config";
-import {verfiyEmailStyles as s} from "../../assets/dummyStyles.js";
+import {verifyEmailStyles as s} from "../../assets/dummyStyles.js";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
