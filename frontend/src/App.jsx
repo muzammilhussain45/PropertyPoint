@@ -10,6 +10,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import Profile from "./pages/shared/Profile";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
 
         <Route element={<AdminLayout />}>
           <Route path="/admin-dashboard" element={<AdminDashboard/>} />
+          <Route path="/admin/users" element={<AdminUsers/>} />
         </Route>
       </Routes>
     </div>
