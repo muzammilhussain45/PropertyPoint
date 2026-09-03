@@ -11,6 +11,7 @@ import Profile from "./pages/shared/Profile";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
+import SellerRequest from "./pages/admin/SellerRequest";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route path="/admin-dashboard" element={<AdminDashboard/>} />
           <Route path="/admin/users" element={<AdminUsers/>} />
+          <Route path="/admin/seller-requests" element={<SellerRequest/>} />
         </Route>
       </Routes>
     </div>
