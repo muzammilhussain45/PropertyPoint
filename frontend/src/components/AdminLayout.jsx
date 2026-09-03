@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import DashboardNavbar from "./DashboardNavbar";
-import s from "../styles/adminLayoutStyles.module.css";
+import { adminLayoutStyles as s } from "../assets/dummyStyles";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
