@@ -25,7 +25,7 @@ import {
 import Navbar from "../../components/common/Navbar.jsx";
 import PropertyCard from "../../components/common/PropertyCard.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
-import API_URL from "../../config.js";
+import { API_URL } from "../../config.js";
 import { landingPageStyles as s } from "../../assets/dummyStyles.js";
 import banner from "../../assets/banner.png";
 
