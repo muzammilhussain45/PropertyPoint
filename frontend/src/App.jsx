@@ -14,6 +14,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import SellerRequest from "./pages/admin/SellerRequest";
 import AdminProperties from "./pages/admin/AdminProperties";
 import AdminInquiries from "./pages/admin/AdminInquiries";
+import AdminContacts from "./pages/admin/AdminContacts";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/admin/seller-requests" element={<SellerRequest/>} />
           <Route path="/admin/properties" element={<AdminProperties/>} />
           <Route path="/admin/inquiries" element={<AdminInquiries/>} />
+          <Route path="/admin/contacts" element={<AdminContacts/>} />
         </Route>
       </Routes>
     </div>
