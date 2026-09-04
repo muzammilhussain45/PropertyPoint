@@ -12,6 +12,8 @@ import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import SellerRequest from "./pages/admin/SellerRequest";
+import AdminProperties from "./pages/admin/AdminProperties";
+import AdminInquiries from "./pages/admin/AdminInquiries";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard/>} />
           <Route path="/admin/users" element={<AdminUsers/>} />
           <Route path="/admin/seller-requests" element={<SellerRequest/>} />
+          <Route path="/admin/properties" element={<AdminProperties/>} />
+          <Route path="/admin/inquiries" element={<AdminInquiries/>} />
         </Route>
       </Routes>
     </div>
