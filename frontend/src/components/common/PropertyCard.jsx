@@ -164,24 +164,23 @@ const PropertyCard = ({
             )}
           </div>
 
-          {!renderActions ? (
+          {!renderActions && (
             <div className={s.viewDetailsButton}>
               <button className={s.viewDetailsBtn}>View Details</button>
-            </div>
-          ) : (
-            <div
-              className={s.actionsContainer}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              onMouseDown={(e) => e.stopPropagation()}
-            >
-              {renderActions(property)}
             </div>
           )}
         </div>
       </Link>
+
+      {renderActions && (
+        <div
+          className={s.actionsContainer}
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          {renderActions(property)}
+        </div>
+      )}
     </div>
   );
 };

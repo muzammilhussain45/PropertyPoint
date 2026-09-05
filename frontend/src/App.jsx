@@ -18,6 +18,7 @@ import AdminContacts from "./pages/admin/AdminContacts";
 import SellerLayout from "./components/SellerLayout";
 import SellerDashboard from "./pages/seller/SellerDashboard";
 import AddProperty from "./pages/seller/AddProperty";
+import MyProperties from "./pages/seller/MyProperties";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route element={<SellerLayout />}>
           <Route path="/dashboard" element={<SellerDashboard/>} />
           <Route path="/add-property" element={<AddProperty/>} />
+          <Route path="/my-properties" element={<MyProperties/>} />
         </Route>
 
         <Route element={<AdminLayout />}>
