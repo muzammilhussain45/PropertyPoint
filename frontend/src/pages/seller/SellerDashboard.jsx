@@ -49,7 +49,7 @@ const SellerDashboard = () => {
           axios.get(`${API_URL}/api/inquiry/seller`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-        ]);        
+        ]);
 
       setStats(statsResponse.data?.stats || statsResponse.data);
 
@@ -264,6 +264,7 @@ const SellerDashboard = () => {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
+                          e.preventDefault();
                           handleStatusUpdate(p._id, p.status);
                         }}
                         className={s.statusButton(p.status)}
@@ -290,7 +291,11 @@ const SellerDashboard = () => {
 
                       <button
                         type="button"
-                        onClick={() => handleDelete(p._id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDelete(p._id);
+                        }}
                         className={s.deleteButton}
                       >
                         <HiOutlineTrash size={14} />

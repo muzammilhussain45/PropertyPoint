@@ -45,11 +45,6 @@ const PropertyDetails = () => {
   const [isInWishlist, setIsInWishlist] = useState(false);
 
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const formattedPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(property.price);
 
   const openLightbox = (index) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
@@ -71,6 +66,8 @@ const PropertyDetails = () => {
         });
 
         setProperty(response.data.property);
+   
+        
         setSimilarProperties(response.data.similarProperties || []);
 
         if (user && user.role === "buyer") {
@@ -218,7 +215,6 @@ const PropertyDetails = () => {
     );
   }
 
-  // Error Screen
   if (error || !property) {
     return (
       <div
@@ -229,6 +225,12 @@ const PropertyDetails = () => {
       </div>
     );
   }
+
+  const formattedPrice = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(property.price);
 
   const stats = [
     {
@@ -269,7 +271,10 @@ const PropertyDetails = () => {
       value: new Date(property.createdAt).toLocaleDateString(),
     },
     { label: "Property Type", value: property.propertyType },
-    { label: "Status", value: `For ${property.status}` },
+    {
+      label: "Status",
+      value: property.status === "sold" ? "Sold" : "For Sale",
+    },
   ];
 
   return (
@@ -456,7 +461,7 @@ const PropertyDetails = () => {
                   ? property.amenities
                   : ["Parking", "Security", "Water Supply", "Power Backup"]
                 ).map((amn, i) => (
-                  <div key={index} className={s.amenityItem}>
+                  <div key={i} className={s.amenityItem}>
                     <HiBadgeCheck size={18} className={s.amenityIcon} />
                     <span className={s.amenityText}>{amn}</span>
                   </div>
@@ -513,8 +518,11 @@ const PropertyDetails = () => {
               )}
 
               <div className={s.priceCardAvailability}>
-                Available for:{" "}
-                {property.status?.toLowerCase() === "rent" ? "Rent" : "Sale"}
+                {property.status?.toLowerCase() === "sold"
+                  ? "Sold"
+                  : `Available for: ${
+                      property.status?.toLowerCase() === "rent" ? "Rent" : "Sale"
+                    }`}
               </div>
             </div>
 
