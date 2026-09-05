@@ -38,9 +38,9 @@ const PropertyCard = ({
     }
   };
 
-  const formattedPrice = new Intl.NumberFormat("en-IN", {
+  const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "INR",
+    currency: "USD",
     maximumFractionDigits: 0,
   }).format(property.price);
 

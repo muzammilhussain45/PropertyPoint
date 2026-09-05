@@ -279,13 +279,14 @@ const SellerDashboard = () => {
                         </span>
                       </button>
 
-                      <Link
-                        to={`/edit-property/${p._id}`}
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/edit-property/${p._id}`)}
                         className={s.editButton}
                       >
                         <HiOutlinePencilAlt size={14} />
                         <span>Edit</span>
-                      </Link>
+                      </button>
 
                       <button
                         type="button"
@@ -350,9 +351,7 @@ const SellerDashboard = () => {
                     <div className={s.inquiryDate}>
                       {new Date(inq.createdAt).toLocaleDateString()}
                     </div>
-                    <span
-                      className={s.inquiryStatus(inq.status)}
-                    >
+                    <span className={s.inquiryStatus(inq.status)}>
                       {inq.status === "read" ? "Read" : "New"}
                     </span>
                   </div>
