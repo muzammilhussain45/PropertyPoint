@@ -28,6 +28,7 @@ import {
 } from "./components/common/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import MyInquiries from "./pages/buyer/MyInquiries";
+import ChatMessages from "./pages/shared/ChatMessages";
 
 const ScrollToTopOnRouteChange = () => {
   const { pathname } = useLocation();
@@ -116,6 +117,7 @@ function App() {
           <Route element={<SellerLayoutWrapper />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/inquiries" element={<MyInquiries />} />
+            <Route path="/chat-messages" element={<ChatMessages />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={["seller"]} />}>
