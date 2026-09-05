@@ -21,7 +21,7 @@ export const addProperty = async (req, res) => {
       price: Number(req.body.price),
       city: req.body.city,
       area: req.body.area,
-      pincode: req.body.pincode,
+      pinCode: req.body.pinCode,
       propertyType: req.body.propertyType,
       bhk: req.body.bhk ? String(req.body.bhk) : undefined,
       bathrooms: req.body.bathrooms ? Number(req.body.bathrooms) : undefined,
