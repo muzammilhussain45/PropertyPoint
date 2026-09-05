@@ -245,7 +245,7 @@ const AddProperty = () => {
                     >
                       <option value="unfurnished">Unfurnished</option>
                       <option value="semi furnished">Semi-Furnished</option>
-                      <option value="furnished">Fully Furnished</option>
+                      <option value="fully furnished">Fully Furnished</option>
                     </select>
                   </div>
 

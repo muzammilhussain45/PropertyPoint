@@ -83,7 +83,7 @@ export const updateProperty = async (req, res) => {
       "price",
       "city",
       "area",
-      "pincode",
+      "pinCode",
       "propertyType",
       "bhk",
       "bathrooms",
@@ -214,7 +214,7 @@ export const getAllProperties = async (req, res) => {
     const {
       city,
       area,
-      pincode,
+      pinCode,
       propertyType,
       bhk,
       furnishing,
@@ -233,7 +233,7 @@ export const getAllProperties = async (req, res) => {
     if (seller) query.seller = seller;
     if (city) query.city = new RegExp(city, "i");
     if (area) query.area = new RegExp(area, "i");
-    if (pincode) query.pincode = pincode;
+    if (pinCode) query.pinCode = pinCode;
 
     if (propertyType) {
       query.propertyType = { $in: propertyType.toLowerCase().split(",") };

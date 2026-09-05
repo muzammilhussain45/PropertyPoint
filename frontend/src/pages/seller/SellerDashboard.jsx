@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   HiOutlineDownload,
@@ -23,6 +23,7 @@ import { sellerDashboardStyles as s } from "../../assets/dummyStyles.js";
 
 const SellerDashboard = () => {
   const { logout, token } = useAuth();
+  const navigate = useNavigate();
 
   const [stats, setStats] = useState({
     totalProperties: 0,
