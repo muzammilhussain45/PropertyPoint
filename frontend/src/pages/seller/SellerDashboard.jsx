@@ -26,7 +26,7 @@ const SellerDashboard = () => {
 
   const [stats, setStats] = useState({
     totalProperties: 0,
-    activeListings: 0,
+    activeListing: 0,
     soldProperties: 0,
     totalInquiries: 0,
     totalViews: 0,
@@ -49,7 +49,7 @@ const SellerDashboard = () => {
           axios.get(`${API_URL}/api/inquiry/seller`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-        ]);
+        ]);        
 
       setStats(statsResponse.data?.stats || statsResponse.data);
 
@@ -160,7 +160,7 @@ const SellerDashboard = () => {
     },
     {
       title: "Live Listings",
-      value: stats.activeListings?.toLocaleString() || "0",
+      value: stats.activeListing?.toLocaleString() || "0",
       icon: HiOutlineLibrary,
       color: "#0d6e59",
     },

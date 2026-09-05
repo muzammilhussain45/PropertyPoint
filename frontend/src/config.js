@@ -92,7 +92,7 @@ api.interceptors.response.use(
  * GET — returns `response.data` directly.
  *
  * @example
- *   const properties = await api.get("/property", { params: { city: "Mumbai" } });
+ *   const properties = await api.get("/property", { params: { city: "New York" } });
  */
 export const get = (url, config) => api.get(url, config).then((r) => r.data);
 
