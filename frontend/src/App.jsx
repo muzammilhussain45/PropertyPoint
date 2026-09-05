@@ -29,6 +29,7 @@ import {
 import { useAuth } from "./context/AuthContext";
 import MyInquiries from "./pages/buyer/MyInquiries";
 import ChatMessages from "./pages/shared/ChatMessages";
+import Contact from "./pages/shared/Contact";
 
 const ScrollToTopOnRouteChange = () => {
   const { pathname } = useLocation();
@@ -118,6 +119,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/inquiries" element={<MyInquiries />} />
             <Route path="/chat-messages" element={<ChatMessages />} />
+            <Route path="/contact" element={<Contact />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={["seller"]} />}>
