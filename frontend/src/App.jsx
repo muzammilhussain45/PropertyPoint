@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { FaChevronUp } from "react-icons/fa";
 import LandingPage from "./pages/shared/LandingPage";
 import Properties from "./pages/shared/Properties";
@@ -33,6 +27,7 @@ import {
   PublicRoute,
 } from "./components/common/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
+import MyInquiries from "./pages/buyer/MyInquiries";
 
 const ScrollToTopOnRouteChange = () => {
   const { pathname } = useLocation();
@@ -120,6 +115,7 @@ function App() {
         >
           <Route element={<SellerLayoutWrapper />}>
             <Route path="/profile" element={<Profile />} />
+            <Route path="/inquiries" element={<MyInquiries />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={["seller"]} />}>
@@ -146,7 +142,7 @@ function App() {
             </Route>
           </Route>
         </Route>
-        <Route path="*" element={<Navigate to="/" replace/>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
