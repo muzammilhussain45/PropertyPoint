@@ -56,5 +56,3 @@ export const PublicRoute = () => {
 
   return <Outlet />;
 };
-
-export { ProtectedRoute, PublicRoute };
