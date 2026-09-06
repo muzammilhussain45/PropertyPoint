@@ -1,6 +1,8 @@
 import express from 'express';
 
 import Chat from '../models/chat.model.js';
+import Property from '../models/property.model.js';
+import User from '../models/user.model.js';
 import { protect } from '../middlewares/auth.middleware.js';
 
 const chatRouter = express.Router();
@@ -18,13 +20,45 @@ chatRouter.post('/start', async (req, res) => {
     if (req.user.role === 'seller') {
       buyerId = providedBuyerId;
       finalSellerId = req.user._id;
-    } else {
+    } else if (req.user.role === 'buyer') {
       buyerId = req.user._id;
       finalSellerId = sellerId;
+    } else {
+      return res.status(403).json({ message: 'Only buyers and sellers can start chats' });
     }
 
     if (!buyerId || !finalSellerId) {
       return res.status(400).json({ message: 'Missing buyer or seller ID' });
+    }
+
+    if (buyerId.toString() === finalSellerId.toString()) {
+      return res.status(400).json({ message: 'A user cannot chat with themselves' });
+    }
+
+    if (req.user.role === 'seller') {
+      const buyer = await User.findOne({ _id: buyerId, role: 'buyer' });
+      if (!buyer) {
+        return res.status(400).json({ message: 'Buyer not found' });
+      }
+    } else {
+      const seller = await User.findOne({
+        _id: finalSellerId,
+        role: 'seller',
+        isApproved: true,
+      });
+      if (!seller) {
+        return res.status(400).json({ message: 'Approved seller not found' });
+      }
+    }
+
+    if (propertyId) {
+      const property = await Property.findOne({
+        _id: propertyId,
+        seller: finalSellerId,
+      });
+      if (!property) {
+        return res.status(400).json({ message: 'Property not found for this seller' });
+      }
     }
 
     let chat = await Chat.findOne({
@@ -73,10 +107,14 @@ chatRouter.post('/send', async (req, res) => {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
+    if (typeof text !== 'string' || !text.trim()) {
+      return res.status(400).json({ message: 'Message text is required' });
+    }
+
     const newMessage = {
       sender: userId,
-      text,
-      image,
+      text: text.trim(),
+      image: typeof image === 'string' && image.trim() ? image : undefined,
       createdAt: new Date(),
     };
 

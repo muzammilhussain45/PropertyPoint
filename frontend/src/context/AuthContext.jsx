@@ -18,7 +18,12 @@ export const AuthProvider = ({ children }) => {
       const storedUser =
         localStorage.getItem("user") || sessionStorage.getItem("user");
       if (storedUser) {
-        setUser(JSON.parse(storedUser));
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch {
+          localStorage.removeItem("user");
+          sessionStorage.removeItem("user");
+        }
       }
     }
     setLoading(false);

@@ -19,10 +19,10 @@ const PropertyCard = ({
   isWishlisted,
   onToggleWishlist,
 }) => {
-  if (!property) return null;
-
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  if (!property) return null;
 
   const handleWishlistClick = (e) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ const PropertyCard = ({
       <Link to={`/property/${property._id}`} className={s.link}>
         <div className={s.imageSection}>
           <img
-            src={property.images?.[0]}
+            src={property.images?.[0] || "/favicon.png"}
             alt={property.title}
             className={s.image}
           />

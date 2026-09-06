@@ -4,7 +4,9 @@ import Inquiry from '../models/inquiry.model.js';
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password');
+    const users = await User.find().select(
+      '-password -verificationToken -resetPasswordToken -resetPasswordExpire',
+    );
     return res.json({
       success: true,
       count: users.length,
@@ -18,6 +20,12 @@ export const getAllUsers = async (req, res) => {
 export const blockUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    if (user._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({ success: false, message: 'You cannot block your own account' });
+    }
     user.isBlocked = !user.isBlocked;
 
     await user.save();
@@ -34,7 +42,14 @@ export const blockUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => { 
   try {
-    await User.findByIdAndDelete(req.params.id);
+    if (req.params.id === req.user._id.toString()) {
+      return res.status(400).json({ success: false, message: 'You cannot delete your own account' });
+    }
+
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
     return res.json({
       success: true,
       message: 'User deleted successfully',
@@ -113,7 +128,9 @@ export const getPendingSeller = async (req, res) => {
     const pendingSellers = await User.find({
       role: 'seller',
       isApproved: false,
-    }).select('-password');
+    }).select(
+      '-password -verificationToken -resetPasswordToken -resetPasswordExpire',
+    );
 
     return res.json({
       success: true,
@@ -139,10 +156,16 @@ export const approveSeller = async (req, res) => {
     seller.isApproved = true;
     await seller.save();
 
+    const safeSeller = seller.toObject();
+    delete safeSeller.password;
+    delete safeSeller.verificationToken;
+    delete safeSeller.resetPasswordToken;
+    delete safeSeller.resetPasswordExpire;
+
     return res.json({
       success: true,
       message: 'Seller approved successfully',
-      seller,
+      seller: safeSeller,
     });
   } catch (err) {
     return res.status(500).json({ message: err.message });

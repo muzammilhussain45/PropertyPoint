@@ -52,8 +52,10 @@ const LandingPage = () => {
   useEffect(() => {
     fetchProperties();
     fetchCounts();
-    if (user) {
+    if (user?.role === "buyer") {
       fetchWishlist();
+    } else {
+      setWishlistedIds([]);
     }
   }, [user]);
 
@@ -347,7 +349,7 @@ const LandingPage = () => {
 
           <div className={s.featuresContent}>
             <h2 className={s.featuresHeading}>
-              Why Property Point <br /> is the
+              Why Property Point <br /> is the{" "}
               <span className={s.textGradient}>Preferred Choice</span>
             </h2>
             <p className={s.featuresSubtext}>
@@ -369,7 +371,7 @@ const LandingPage = () => {
               ))}
             </ul>
             <a href="#process" className={s.learnMoreLink}>
-              Learn more about our process &rarr ;
+              Learn more about our process &rarr;
             </a>
           </div>
         </div>

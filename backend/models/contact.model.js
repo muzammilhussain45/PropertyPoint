@@ -7,7 +7,7 @@ const contactSchema = new mongoose.Schema(
     phone: { type: String },
     role: {
       type: String,
-      enum: ["buyer", "seller"],
+      enum: ["buyer", "seller", "admin", "guest"],
       required: true,
     },
     message: { type: String, required: true },

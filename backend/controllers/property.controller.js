@@ -4,6 +4,9 @@ import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 import cloudinary from "../config/cloudinary.js";
 import jwt from "jsonwebtoken";
 
+const escapeRegExp = (value) =>
+  String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export const addProperty = async (req, res) => {
   try {
     let imageUrls = [];
@@ -231,8 +234,8 @@ export const getAllProperties = async (req, res) => {
     };
 
     if (seller) query.seller = seller;
-    if (city) query.city = new RegExp(city, "i");
-    if (area) query.area = new RegExp(area, "i");
+    if (city) query.city = new RegExp(escapeRegExp(city), "i");
+    if (area) query.area = new RegExp(escapeRegExp(area), "i");
     if (pinCode) query.pinCode = pinCode;
 
     if (propertyType) {
@@ -240,7 +243,19 @@ export const getAllProperties = async (req, res) => {
     }
     if (bhk) {
       if (bhk === "5+") {
-        query.bhk = { $gte: "5" };
+        query.$expr = {
+          $gte: [
+            {
+              $convert: {
+                input: "$bhk",
+                to: "int",
+                onError: null,
+                onNull: null,
+              },
+            },
+            5,
+          ],
+        };
       } else {
         query.bhk = bhk;
       }
@@ -248,10 +263,14 @@ export const getAllProperties = async (req, res) => {
     if (furnishing) {
       const furnishingArray = furnishing.split(",");
       query.furnishing = {
-        $in: furnishingArray.map((f) => new RegExp(`^${f.trim()}$`, "i")),
+        $in: furnishingArray.map(
+          (f) => new RegExp(`^${escapeRegExp(f.trim())}$`, "i"),
+        ),
       };
     }
-    if (status) query.status = status;
+    if (status && ["sale", "sold"].includes(status)) {
+      query.status = status;
+    }
 
     if (minPrice || maxPrice) {
       query.price = {};
@@ -314,12 +333,15 @@ export const getPropertyDetails = async (req, res) => {
       } catch (err) {}
     }
 
-    const isSellerChecking = visitorId === property.seller._id.toString();
+    const sellerId = property.seller?._id?.toString();
+    const isSellerChecking = sellerId && visitorId === sellerId;
 
     // only increment the view if not seller but if he edit then increases the view
-    if (!isSellerChecking && !property.viewedBy.includes(visitorId)) {
-      property.views += 1;
-      property.viewedBy.push(visitorId);
+    const viewedBy = property.viewedBy || [];
+    if (!isSellerChecking && !viewedBy.includes(visitorId)) {
+      property.views = (property.views || 0) + 1;
+      viewedBy.push(visitorId);
+      property.viewedBy = viewedBy;
       await property.save();
     }
 

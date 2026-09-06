@@ -15,6 +15,7 @@ import { profileStyles as s } from "../../assets/dummyStyles.js";
 
 const Profile = () => {
   const { user, setUser, token } = useAuth();
+  const userStorage = localStorage.getItem("token") ? localStorage : sessionStorage;
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -85,7 +86,7 @@ const Profile = () => {
       if (response.data?.success) {
         const updatedUser = response.data.user;
         setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+        userStorage.setItem("user", JSON.stringify(updatedUser));
         setIsEditing(false);
         setImageFile(null);
         setImagePreview(null);

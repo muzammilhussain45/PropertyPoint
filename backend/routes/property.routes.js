@@ -17,6 +17,9 @@ import upload from "../middlewares/upload.middleware.js";
 const propertyRouter = express.Router();
 
 propertyRouter.get("/", getAllProperties);
+propertyRouter.get("/counts", getPropertyCounts);
+propertyRouter.get("/seller/dashboard", protect, authorize("seller"), getSellerDashboard);
+propertyRouter.get("/my", protect, authorize("seller"), getMyProperties);
 
 // protect routes for sellers
 propertyRouter.post(
@@ -26,7 +29,6 @@ propertyRouter.post(
   upload.array("images", 10),
   addProperty,
 );
-propertyRouter.get("/my", protect, authorize("seller"), getMyProperties);
 propertyRouter.put(
   "/:id",
   protect,
@@ -41,13 +43,6 @@ propertyRouter.patch(
   authorize("seller"),
   updatePropertyStatus,
 );
-propertyRouter.get("/counts", getPropertyCounts);
 propertyRouter.get("/:id", getPropertyDetails);
-propertyRouter.get(
-  "/seller/dashboard",
-  protect,
-  authorize("seller"),
-  getSellerDashboard,
-);
 
 export default propertyRouter;

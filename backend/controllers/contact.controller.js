@@ -3,7 +3,8 @@ import sendEmail from "../utils/sendEmail.js";
 
 export const createContact = async (req, res) => {
   try {
-    const { name, email, phone, role, message } = req.body;
+    const { name, email, phone, message } = req.body;
+    const role = req.user?.role || "guest";
 
     const contact = new Contact({ name, email, phone, role, message });
     await contact.save();

@@ -30,13 +30,17 @@ const Properties = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
-  const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  // Upper bound of the price slider. Anything higher than this would be
+  // unfindable in browse mode, so keep it comfortably above realistic prices.
+  const MAX_PRICE = 5000000;
 
   const [filters, setFilters] = useState({
     city: "",
     propertyType: [],
     bhk: "",
-    maxPrice: 500000,
+    maxPrice: MAX_PRICE,
     amenities: [],
     furnishing: [],
     sort: "latest",
@@ -71,8 +75,10 @@ const Properties = () => {
     setFilters(initialFilters);
     fetchProperties(initialFilters);
 
-    if (user) {
+    if (user?.role === "buyer") {
       fetchWishlist();
+    } else {
+      setWishlistedIds([]);
     }
   }, [location.search, user]);
 
@@ -194,7 +200,7 @@ const Properties = () => {
       city: "",
       propertyType: [],
       bhk: "",
-      maxPrice: 500000,
+      maxPrice: MAX_PRICE,
       amenities: [],
       furnishing: [],
       sort: "latest",
@@ -204,7 +210,6 @@ const Properties = () => {
     fetchProperties(reset);
   };
 
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
   return (
     <div className={s.pageContainer}>
       <Navbar />
@@ -213,7 +218,7 @@ const Properties = () => {
         {/* Mobile Filter Toggle Button */}
         <div className={s.mobileFilterButtonWrapper}>
           <button
-            onClick={() => setShowMobileFilter(true)}
+            onClick={() => setShowMobileFilters(true)}
             className={s.mobileFilterButton}
           >
             <HiFilter /> Show Filter & Search
@@ -279,7 +284,7 @@ const Properties = () => {
                 <input
                   type="range"
                   min="300"
-                  max="500000"
+                  max={MAX_PRICE}
                   step="1000"
                   value={filters.maxPrice}
                   onChange={handlePriceChange}
@@ -287,7 +292,7 @@ const Properties = () => {
                 />
                 <div className={s.priceLabels}>
                   <span>$300</span>
-                  <span>$500,000</span>
+                  <span>${MAX_PRICE.toLocaleString("en-US")}</span>
                 </div>
               </div>
 

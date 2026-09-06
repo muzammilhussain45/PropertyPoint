@@ -9,6 +9,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": "http://localhost:5000",
+      // socket.io is used for real-time chat and must reach the backend
+      "/socket.io": {
+        target: "ws://localhost:5000",
+        ws: true,
+      },
     },
   },
 })

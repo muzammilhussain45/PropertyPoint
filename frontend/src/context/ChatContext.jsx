@@ -7,7 +7,7 @@ import { API_URL } from "../config";
 const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const [socket, setSocket] = useState(null);
   const [activeChat, setActiveChat] = useState(null);
@@ -23,11 +23,13 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     setActiveChat(null);
     setNotifications([]);
-  }, [user]);
+  }, [user?._id]);
 
   useEffect(() => {
-    if (user) {
-      const newSocket = io(API_URL);
+    if (user?._id && token) {
+      const newSocket = io(API_URL, {
+        auth: { token },
+      });
       setSocket(newSocket);
 
       newSocket.on("receiveMessage", (data) => {
@@ -40,7 +42,9 @@ export const ChatProvider = ({ children }) => {
         newSocket.close();
       };
     }
-  }, [user]);
+
+    setSocket(null);
+  }, [user?._id, token]);
 
   const joinChat = (chatId) => {
     if (socket) {

@@ -8,8 +8,8 @@ export const sendInquiry = async (req, res) => {
     const { propertyId, message } = req.body;
 
     const property = await Property.findById(propertyId).populate('seller');
-    if (!property) {
-      return res.status(404).json({ success: false, message: 'Property not found' }); 
+    if (!property || !property.seller) {
+      return res.status(404).json({ success: false, message: 'Property or seller not found' });
     }
 
     const inquiry = await Inquiry.create({
@@ -46,12 +46,33 @@ export const getSellerInquiries = async (req, res) => {
   }
 };
 
+export const getBuyerInquiries = async (req, res) => {
+  try {
+    const inquiries = await Inquiry.find({ buyer: req.user._id })
+      .populate('property', 'title price images city')
+      .sort({ createdAt: -1 });
+
+    return res.json({
+      success: true,
+      count: inquiries.length,
+      inquiries,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const markAsRead = async (req, res) => {
   try {
     const inquiry = await Inquiry.findById(req.params.id);
 
     if (!inquiry) {
       return res.status(404).json({ success: false, message: 'Inquiry not found' });
+    }
+
+    // Only the receiving seller can mark their inquiry as read
+    if (inquiry.seller.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
     inquiry.isRead = true;

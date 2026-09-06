@@ -80,7 +80,6 @@ const ChatMessages = () => {
           );
 
           setMessages(response.data?.messages || []);
-          joinChat(activeChat._id);
           scrollToBottom();
         } catch (err) {
           console.error("Error fetching messages:", err);
@@ -89,6 +88,13 @@ const ChatMessages = () => {
       fetchMessages();
     }
   }, [activeChat]);
+
+  // Join after both the selected chat and authenticated socket are ready.
+  useEffect(() => {
+    if (activeChat && socket) {
+      joinChat(activeChat._id);
+    }
+  }, [activeChat, socket]);
 
   // Real-time incoming message listener
   useEffect(() => {
@@ -146,6 +152,7 @@ const ChatMessages = () => {
       );
 
       if (response.data?.newMessage) {
+        setMessages((prev) => [...prev, response.data.newMessage]);
         sendMessage(
           activeChat._id,
           textToSend,
@@ -199,7 +206,7 @@ const ChatMessages = () => {
         },
       );
 
-      setMessages(response.data?.messages || []);
+      setMessages(response.data?.chat?.messages || []);
     } catch (err) {
       console.error("Error deleting the message:", err);
     }

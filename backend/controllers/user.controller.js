@@ -3,7 +3,9 @@ import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
+    const user = await User.findById(req.user._id).select(
+      "-password -verificationToken -resetPasswordToken -resetPasswordExpire",
+    );
     return res.status(200).json({ success: true, user });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -49,11 +51,16 @@ export const updateProfile = async (req, res) => {
     if (address !== undefined) user.address = address;
 
     const updatedUser = await user.save();
+    const safeUser = updatedUser.toObject();
+    delete safeUser.password;
+    delete safeUser.verificationToken;
+    delete safeUser.resetPasswordToken;
+    delete safeUser.resetPasswordExpire;
 
     return res.json({
       success: true,
       message: "Profile updated successfully",
-      user: updatedUser,
+      user: safeUser,
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });

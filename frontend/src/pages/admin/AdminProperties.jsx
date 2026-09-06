@@ -90,7 +90,7 @@ const AdminProperties = () => {
               <PropertyCard
                 key={p._id}
                 property={p}
-                renderAction={() => (
+                renderActions={() => (
                   <div className={s.actionWrapper}>
                     {/* Seller Information */}
                     <div className={s.sellerInfo}>

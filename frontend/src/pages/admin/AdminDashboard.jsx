@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalProperties: 0,
-    activeListings: 0,
+    activeListing: 0,
     soldProperties: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -61,7 +61,7 @@ const AdminDashboard = () => {
     },
     {
       title: "Active Listings",
-      value: stats.activeListings || 0,
+      value: stats.activeListing || 0,
       icon: HiOutlineTicket,
       color: "#3b82f6",
       bg: "#dbeafe",

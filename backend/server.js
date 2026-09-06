@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import http from 'http';
 import { Server } from 'socket.io';
+import jwt from 'jsonwebtoken';
+import Chat from './models/chat.model.js';
+import User from './models/user.model.js';
 import { connectDB } from './config/db.js';
 
 import authRouter from './routes/auth.routes.js';
@@ -63,13 +66,73 @@ const io = new Server(server, {
   },
 });
 
+io.use(async (socket, next) => {
+  const token = socket.handshake.auth?.token;
+
+  if (!token) {
+    return next(new Error('Authentication required'));
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('_id isBlocked');
+
+    if (!user || user.isBlocked) {
+      return next(new Error('Account is unavailable'));
+    }
+
+    socket.userId = user._id.toString();
+    return next();
+  } catch {
+    return next(new Error('Invalid or expired token'));
+  }
+});
+
 io.on('connection', (socket) => {
-  socket.on('joinChat', (chatId) => {
-    socket.join(chatId);
+  socket.on('joinChat', async (chatId) => {
+    try {
+      const chat = await Chat.findOne({
+        _id: chatId,
+        $or: [{ buyer: socket.userId }, { seller: socket.userId }],
+      });
+
+      if (chat) {
+        socket.join(chatId);
+      }
+    } catch {
+      // Ignore malformed or unauthorized chat IDs.
+    }
   });
 
-  socket.on('sendMessage', (data) => {
-    io.to(data.chatId).emit('receiveMessage', data);
+  socket.on('sendMessage', async (data) => {
+    try {
+      if (
+        !data ||
+        typeof data.chatId !== 'string' ||
+        typeof data.text !== 'string' ||
+        !data.text.trim() ||
+        String(data.sender) !== String(socket.userId)
+      ) {
+        return;
+      }
+
+      const chat = await Chat.findOne({
+        _id: data.chatId,
+        $or: [{ buyer: socket.userId }, { seller: socket.userId }],
+      });
+
+      if (!chat) {
+        return;
+      }
+
+      socket.to(data.chatId).emit('receiveMessage', {
+        ...data,
+        sender: socket.userId,
+        text: data.text.trim(),
+      });
+    } catch {
+      // Ignore malformed or unauthorized socket messages.
+    }
   });
 
   socket.on('disconnect', () => {});

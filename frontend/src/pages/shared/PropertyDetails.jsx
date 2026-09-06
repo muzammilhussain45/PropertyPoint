@@ -45,15 +45,16 @@ const PropertyDetails = () => {
   const [isInWishlist, setIsInWishlist] = useState(false);
 
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const images = Array.isArray(property?.images) ? property.images : [];
 
-  const openLightbox = (index) => setLightboxIndex(index);
+  const openLightbox = (index) => {
+    if (images.length > 0) setLightboxIndex(index);
+  };
   const closeLightbox = () => setLightboxIndex(null);
   const nextImage = () =>
-    setLightboxIndex((prev) => (prev + 1) % property.images.length);
+    setLightboxIndex((prev) => (prev + 1) % images.length);
   const prevImage = () =>
-    setLightboxIndex(
-      (prev) => (prev - 1 + property.images.length) % property.images.length,
-    );
+    setLightboxIndex((prev) => (prev - 1 + images.length) % images.length);
 
   // Fetch Property Details & Wishlist Check
   useEffect(() => {
@@ -70,7 +71,7 @@ const PropertyDetails = () => {
         
         setSimilarProperties(response.data.similarProperties || []);
 
-        if (user && user.role === "buyer") {
+        if (user?.role === "buyer") {
           const wishResponse = await axios.get(`${API_URL}/api/wishlist`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -81,6 +82,8 @@ const PropertyDetails = () => {
             (item) => item.property?._id === id,
           );
           setIsInWishlist(found);
+        } else {
+          setIsInWishlist(false);
         }
         setLoading(false);
       } catch (err) {
@@ -300,36 +303,35 @@ const PropertyDetails = () => {
             className={s.galleryGrid}
             style={{
               gridTemplateColumns:
-                property.images.length > 1 ? "repeat(4, 1fr)" : "1fr",
+                images.length > 1 ? "repeat(4, 1fr)" : "1fr",
               gridTemplateRows:
-                property.images.length > 1 ? "repeat(2, 180px)" : "400px",
+                images.length > 1 ? "repeat(2, 180px)" : "400px",
             }}
           >
             {/* Main Featured Image */}
 
             <div
-              className={s.galleryMainItem(property.images.length > 1)}
+              className={s.galleryMainItem(images.length > 1)}
               onClick={() => openLightbox(0)}
             >
               <img
-                src={property.images[0]}
+                src={images[0] || "/favicon.png"}
                 alt={property.title || "Property"}
                 className={s.galleryImage}
               />
             </div>
 
             {/* Side Grid Images (1 to 4) */}
-            {property.images &&
-              property.images.slice(1, 5).map((img, idx) => (
+            {images.slice(1, 5).map((img, idx) => (
                 <div
                   key={idx}
                   className={s.gallerySideItem}
                   onClick={() => openLightbox(idx + 1)}
                 >
                   <img src={img} alt="image" className={s.galleryImage} />
-                  {idx === 3 && property.images.length > 5 && (
+                  {idx === 3 && images.length > 5 && (
                     <div className={s.galleryMoreOverlay}>
-                      +{property.images.length - 5}
+                      +{images.length - 5}
                     </div>
                   )}
                 </div>
@@ -339,8 +341,7 @@ const PropertyDetails = () => {
           {/* Mobile Horizontal Carousel / Slider */}
           <div className={s.mobileSliderContainer}>
             <div className={s.mobileSliderTrack}>
-              {property.images &&
-                property.images.map((img, idx) => (
+              {images.map((img, idx) => (
                   <div
                     key={idx}
                     className={s.mobileSliderWrapper}
@@ -352,7 +353,7 @@ const PropertyDetails = () => {
                       className={s.mobileSlideImage}
                     />
                     <div className={s.mobileSlideCounter}>
-                      {idx + 1} / {property.images.length}
+                      {idx + 1} / {images.length}
                     </div>
                   </div>
                 ))}
@@ -372,12 +373,12 @@ const PropertyDetails = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={property.images[lightboxIndex]}
+                src={images[lightboxIndex]}
                 alt="images"
                 className={s.lightboxImage}
               />
 
-              {property.images && property.images.length > 1 && (
+              {images.length > 1 && (
                 <>
                   <button className={s.lightboxPrevBtn} onClick={prevImage}>
                     <HiChevronLeft size={30} />
@@ -389,7 +390,7 @@ const PropertyDetails = () => {
               )}
 
               <div className={s.lightboxCounter}>
-                {lightboxIndex + 1} / {property.images?.length}
+                {lightboxIndex + 1} / {images.length}
               </div>
             </div>
           </div>
