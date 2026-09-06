@@ -199,7 +199,7 @@ const PropertyDetails = () => {
         },
       );
 
-      navigate("/chat-message", { state: { chat } });
+      navigate("/chat-messages", { state: { chat } });
     } catch (err) {
       console.error("error starting the chat", err);
       alert("Failed to start chat");

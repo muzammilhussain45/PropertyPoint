@@ -50,8 +50,8 @@ const Properties = () => {
   ];
   const bhkOptions = ["1", "2", "3", "4", "5+"];
   const furnishingOptions = [
-    { label: "Furnished", value: "furnished" },
-    { label: "Semi-Furnished", value: "semi-furnished" },
+    { label: "Furnished", value: "fully furnished" },
+    { label: "Semi-Furnished", value: "semi furnished" },
     { label: "Unfurnished", value: "unfurnished" },
   ];
 
