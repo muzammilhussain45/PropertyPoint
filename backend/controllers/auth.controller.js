@@ -13,16 +13,20 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: 'User already registered' });
     }
 
+    // Never trust the client-provided role: only buyers and sellers can
+    // self-register. Admin accounts must be created out-of-band.
+    const safeRole = role === 'seller' ? 'seller' : 'buyer';
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
 
-    const isApproved = role === 'seller' ? false : true;
+    const isApproved = safeRole === 'seller' ? false : true;
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role,
+      role: safeRole,
       isApproved,
       verificationToken,
     });
@@ -86,10 +90,16 @@ export const login = async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    const safeUser = user.toObject();
+    delete safeUser.password;
+    delete safeUser.verificationToken;
+    delete safeUser.resetPasswordToken;
+    delete safeUser.resetPasswordExpire;
+
     return res.json({
       message: 'Login successful',
       token,
-      user,
+      user: safeUser,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -98,7 +108,9 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select(
+      '-password -verificationToken -resetPasswordToken -resetPasswordExpire',
+    );
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -188,8 +200,15 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const {token} = req.params;
+    const { token } = req.params;
     const { password } = req.body;
+
+    if (typeof password !== 'string' || !password.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password is required',
+      });
+    }
 
     const resetPasswordToken = crypto
       .createHash('sha256')
